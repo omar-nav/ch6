@@ -278,6 +278,55 @@ function validateMessage() {
     }
 }
 
+/* validate create account fieldset */
+function validateCreateAccount() {
+    var errorDiv = document.querySelector("#createAccount .errorMessage");
+    var usernameElement = document.getElementById("username");
+    var pass1Element = document.getElementById("pass1");
+    var pass2Element = document.getElementById("pass2");
+    var passwordMismatch = false;
+    var invColor = "rgb(255,233,233)";
+    try {
+        // reset styles to valid state
+        usernameElement.style.background = "";
+        pass1Element.style.background = "";
+        pass2Element.style.background = "";
+        errorDiv.style.display = "none";
+        if ((usernameElement.value !== "" && pass1Element.value !== "" && pass2Element.value !== "")) {
+            // all fields are filled
+            if (pass1Element.value !== pass2Element.value) {
+                // passwords don't match
+                passwordMismatch = true;
+                throw "Passwords entered do not match; please reenter.";
+            }
+        }
+        if (!(usernameElement.value === "" && pass1Element.value === "" && pass2Element.value === "")) {
+            // not all fields are blank
+            throw "Please complete all fields to create an account.";
+        }
+    }
+    catch(msg) {
+        errorDiv.innerHTML = msg;
+        errorDiv.style.display = "block";
+        if (passwordMismatch) {
+            usernameElement.style.background = "";
+            pass1Element.style.background = "";
+            pass2Element.style.background = "";
+        } else {
+            if (usernameElement.value === "") {
+                usernameElement.style.background = invColor;
+            }
+            if (pass1Element.value === "") {
+                pass1Element.style.background = invColor;
+            }
+            if (pass2Element.value === "") {
+                pass2Element.style.background = invColor;
+            }
+        }
+        formValidity = false;
+    }
+}
+
 /* validate form */
 function validateForm(evt) {
     if (evt.preventDefault) {
@@ -291,6 +340,7 @@ function validateForm(evt) {
     validateDeliveryDate();
     validatePayment();
     validateMessage();
+    validateCreateAccount();
     if (formValidity === true) {
         document.getElementById("errorText").innerHTML = "";
         document.getElementById("errorText").style.display = "none";
