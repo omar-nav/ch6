@@ -167,6 +167,37 @@ function validateAddress(fieldsetId) {
     }
 }
 
+/* validate delivery date fieldset */
+function validateDeliveryDate() {
+    var selectElements = document.querySelectorAll("#deliveryDate select");
+    var errorDiv = document.querySelector("#deliveryDate .errorMessage");
+    var fieldsetValidity = true;
+    var elementCount = selectElements.length;
+    var currentElement;
+    try {
+        for (var i = 0; i < elementCount; i++) {
+            currentElement = selectElements[i];
+            if (currentElement.selectedIndex === -1) {
+                currentElement.style.border = "1px solid red";
+                fieldsetValidity = false;
+            } else {
+                currentElement.style.border = "";
+            }
+        }
+        if (fieldsetValidity === false) {
+            throw "Please specify a delivery date.";
+        } else {
+            errorDiv.style.display = "none";
+            errorDiv.innerHTML = "";
+        }
+    }
+    catch (msg) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        formValidity = false;
+    }
+}
+
 /* validate form */
 function validateForm(evt) {
     if (evt.preventDefault) {
@@ -177,6 +208,7 @@ function validateForm(evt) {
     formValidity = true; // reset value for revalidation
     validateAddress("billingAddress");
     validateAddress("deliveryAddress");
+    validateDeliveryDate();
     if (formValidity === true) {
         document.getElementById("errorText").innerHTML = "";
         document.getElementById("errorText").style.display = "none";
