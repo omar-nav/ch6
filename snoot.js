@@ -257,6 +257,27 @@ function validatePayment() {
     }
 }
 
+/* validate message fieldset */
+function validateMessage() {
+    var errorDiv = document.querySelector("#message .errorMessage");
+    var msgBox = document.getElementById("customText");
+    try {
+        if (document.getElementById("custom").checked && ((msgBox.value === "") || (msgBox.value === msgBox.placeholder))) {
+            // custom checked but message box empty
+            throw "Please enter your message text.";
+        } else {
+            errorDiv.style.display = "none";
+            msgBox.style.background = "white";
+        }
+    }
+    catch (msg) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        msgBox.style.background = "rgb(255,233,233)";
+        formValidity = false;
+    }
+}
+
 /* validate form */
 function validateForm(evt) {
     if (evt.preventDefault) {
@@ -269,6 +290,7 @@ function validateForm(evt) {
     validateAddress("deliveryAddress");
     validateDeliveryDate();
     validatePayment();
+    validateMessage();
     if (formValidity === true) {
         document.getElementById("errorText").innerHTML = "";
         document.getElementById("errorText").style.display = "none";
