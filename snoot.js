@@ -140,6 +140,14 @@ function validateAddress(fieldsetId) {
                 currentElement.style.background = "white";
             }
         }
+        currentElement = document.querySelector("#" + fieldsetId + " select");
+        // validate state select element
+        if (currentElement.selectedIndex === -1) {
+            currentElement.style.border = "1px solid red";
+            fieldsetValidity = false;
+        } else {
+            currentElement.style.border = "";
+        }
         if (fieldsetValidity === false) {
             // throw appropriate message based on current fieldset
             if (fieldsetId === "billingAddress") {
