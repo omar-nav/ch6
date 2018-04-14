@@ -145,7 +145,7 @@ function validateAddress(fieldsetId) {
             if (fieldsetId === "billingAddress") {
                 throw ("Please complete all Billing Address information");
             } else {
-                throw ("Plese complete all Delivery Address information");
+                throw ("Please complete all Delivery Address information");
             }
         } else {
             errorDiv.style.display = "none";
