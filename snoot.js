@@ -11,6 +11,7 @@
 var twentyNine = document.createDocumentFragment();
 var thirty = document.createDocumentFragment();
 var thirtyOne = document.createDocumentFragment();
+var formValidity = true;
 
 /* set up node building blocks for selection list of days */
 function setupDays() {
@@ -121,11 +122,37 @@ function copyBillingAddress() {
     }
 }
 
+/* validate form */
+function validateForm(evt) {
+    if (evt.preventDefault) {
+        evt.preventDefault(); // prevent from submitting
+    } else {
+        evt.returnValue = false; // prevent form from submitting in IE8
+    }
+    formValidity = true; // reset value for revalidation
+    // replace with calls to validation functions
+    if (formValidity === true) {
+        document.getElementById("errorText").innerHTML = "";
+        document.getElementById("errorText").style.display = "none";
+        document.getElementsByTagName("form")[0].submit();
+    } else {
+        document.getElementById("errorText").innerHTML = "Please fix the indicated problems and then resubmit your order.";
+        document.getElementById("errorText").style.display = "block";
+        scroll(0,0);
+    }
+}
+
 /* create event listeners */
 function createEventListeners() {
     var deliveryMonth = document.getElementById("delivMo");
     var messageBox = document.getElementById("customText");
     var same = document.getElementById("sameAddr");
+    var form = document.getElementsByTagName("form")[0];
+    if (form.addEventListener) {
+        form.addEventListener("submit", validateForm, false);
+    } else if (form.attachEvent) {
+        form.attachEvent("onsubmit", validateForm);
+    }
     if (same.addEventListener) {
         same.addEventListener("click", copyBillingAddress, false);
     } else if (same.attachEvent) {
