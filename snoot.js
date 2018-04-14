@@ -33,17 +33,17 @@ function updateDays() {
     var deliveryYear = document.getElementById("delivYr");
     var selectedMonth = deliveryMonth.options[deliveryMonth.selectedIndex].value;
     while(dates[28]) {
-    // remove child with index of 28 until this index is empty
-    deliveryDay.removeChild(dates[28]);
-}
-if (deliveryYear.selectedIndex === -1) {
-    // if no year is selected, choose the default year so length of Feb can be determined
-    deliveryYear.selectedIndex = 0;
-}
-if (selectedMonth === "2" && deliveryYear.options[deliveryYear.selectedIndex].value === "2018") {
-    // if leap year, Feb has 29 days
-    deliveryDay.appendChild(twentyNine.cloneNode(true));
-}
+        // remove child with index of 28 until this index is empty
+        deliveryDay.removeChild(dates[28]);
+    }
+    if (deliveryYear.selectedIndex === -1) {
+        // if no year is selected, choose the default year so length of Feb can be determined
+        deliveryYear.selectedIndex = 0;
+    }
+    if (selectedMonth === "2" && deliveryYear.options[deliveryYear.selectedIndex].value === "2018") {
+        // if leap year, Feb has 29 days
+        deliveryDay.appendChild(twentyNine.cloneNode(true));
+    }
     else if (selectedMonth === "4" || selectedMonth === "6" || selectedMonth === "9" || selectedMonth === "11") {
         // these months have 30 days
         deliveryDay.appendChild(thirty.cloneNode(true));
@@ -62,9 +62,57 @@ function removeSelectDefaults() {
     }
 }
 
+/*remove fallback placeholder text*/
+function zeroPlaceholder() {
+    var messageBox = document.getElementById("customText");
+    messageBox.style.color = "black";
+    if (messageBox.value === messageBox.placeholder){
+        messageBox.value = "";
+    }
+}
+
+/* restore placeholder text if box contains no user entry */
+function checkPlaceholder() {
+    var messageBox = document.getElementById("customText");
+    if (messageBox.value === "") {
+        messageBox.style.color = "rgb(178, 184, 183)";
+        messageBox.value = messageBox.placeholder;
+    }
+}
+
+function generatePlaceholder() {
+    if (!Modernizr.input.placeholder) {
+        var messageBox = document.getElementById("customText");
+        messageBox.value = messageBox.placeholder;
+        messageBox.style.color = "rgb(178,184,183)";
+        if (messageBox.addEventListener) {
+            messageBox.addEventListener("focus", zeroPlaceholder, false);
+            messageBox.addEventListener("blur", checkPlaceholder, false);
+        } else if (messageBox.attachEvent) {
+            messageBox.attachEvent("onfocus", zeroPlaceholder);
+            messageBox.addEventListener("onblur", checkPlaceholder, false);
+        }
+    }
+}
+
+/* automatically check Custom message check box if user makes entry in customText box */
+function autocheckCustom() {
+    var messageBox = document.getElementById("customText");
+    if (messageBox.value !== "" && messageBox.value !== messageBox.placeholder) {
+        // if user entry in text area, check Custom check box
+        document.getElementById("custom").checked = "checked";
+    }
+}
+
 /* create event listeners */
 function createEventListeners() {
     var deliveryMonth = document.getElementById("delivMo");
+    var messageBox = document.getElementById("customText");
+    if (messageBox.addEventListener) {
+        messageBox.addEventListener("blur", autocheckCustom, false);
+    } else if (messageBox.attachEvent) {
+        messageBox.attachEvent("onblur", autocheckCustom);
+    }
     if (deliveryMonth.addEventListener) {
         deliveryMonth.addEventListener("change", updateDays, false);
     } else if (deliveryMonth.attachEvent) {
@@ -83,6 +131,7 @@ function setUpPage() {
     removeSelectDefaults();
     setupDays();
     createEventListeners();
+    generatePlaceholder();
 }
 
 /* run setup function when page finishes loading */
